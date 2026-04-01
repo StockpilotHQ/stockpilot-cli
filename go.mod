@@ -1,4 +1,4 @@
-module github.com/stockpilot/stockpilot-cli
+module github.com/StockpilotHQ/stockpilot-cli
 
 go 1.22
 

@@ -14,7 +14,7 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -s -w -X github.com/stockpilot/stockpilot-cli/commands.version={{.Version}}
+      - -s -w -X github.com/StockpilotHQ/stockpilot-cli/commands.version={{.Version}}
 
 archives:
   - format: binary

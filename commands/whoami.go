@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/stockpilot/stockpilot-cli/internal/api"
-	"github.com/stockpilot/stockpilot-cli/internal/config"
-	"github.com/stockpilot/stockpilot-cli/internal/output"
+	"github.com/StockpilotHQ/stockpilot-cli/internal/api"
+	"github.com/StockpilotHQ/stockpilot-cli/internal/config"
+	"github.com/StockpilotHQ/stockpilot-cli/internal/output"
 )
 
 var whoamiCmd = &cobra.Command{

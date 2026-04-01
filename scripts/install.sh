@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-REPO="stockpilot/stockpilot-cli"
+REPO="StockpilotHQ/stockpilot-cli"
 BINARY="stockpilot"
 INSTALL_DIR="/usr/local/bin"
 
