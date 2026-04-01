@@ -41,16 +41,15 @@ var ordersListCmd = &cobra.Command{
 			return err
 		}
 
-		if jsonOutput {
-			var v any
-			json.Unmarshal(data, &v)
-			return output.JSON(v)
-		}
-
-		var orders []map[string]any
-		if err := json.Unmarshal(data, &orders); err != nil {
+		orders, err := output.Paginated(data)
+		if err != nil {
 			return err
 		}
+
+		if jsonOutput {
+			return output.JSON(orders)
+		}
+
 		rows := make([][]string, 0, len(orders))
 		for _, o := range orders {
 			rows = append(rows, []string{

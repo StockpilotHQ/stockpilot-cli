@@ -30,10 +30,11 @@ var customersCmd = &cobra.Command{
 			return output.JSON(v)
 		}
 
-		var customers []map[string]any
-		if err := json.Unmarshal(data, &customers); err != nil {
+		customers, err := output.Paginated(data)
+		if err != nil {
 			return err
 		}
+
 		rows := make([][]string, 0, len(customers))
 		for _, c := range customers {
 			rows = append(rows, []string{

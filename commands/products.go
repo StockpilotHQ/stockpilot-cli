@@ -37,16 +37,15 @@ var productsListCmd = &cobra.Command{
 			return err
 		}
 
-		if jsonOutput {
-			var v any
-			json.Unmarshal(data, &v)
-			return output.JSON(v)
-		}
-
-		var products []map[string]any
-		if err := json.Unmarshal(data, &products); err != nil {
+		products, err := output.Paginated(data)
+		if err != nil {
 			return err
 		}
+
+		if jsonOutput {
+			return output.JSON(products)
+		}
+
 		rows := make([][]string, 0, len(products))
 		for _, p := range products {
 			rows = append(rows, []string{

@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/url"
 
@@ -29,8 +28,10 @@ var statusCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		var orders []map[string]any
-		json.Unmarshal(ordersData, &orders)
+		orders, err := output.Paginated(ordersData)
+		if err != nil {
+			return err
+		}
 
 		// Fetch inventory
 		inventoryData, err := client.Get("/inventory", url.Values{
@@ -39,8 +40,10 @@ var statusCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		var inventory []map[string]any
-		json.Unmarshal(inventoryData, &inventory)
+		inventory, err := output.Paginated(inventoryData)
+		if err != nil {
+			return err
+		}
 
 		if jsonOutput {
 			return output.JSON(map[string]any{
@@ -49,7 +52,7 @@ var statusCmd = &cobra.Command{
 			})
 		}
 
-		fmt.Printf("Orders: %d\n\n", len(orders))
+		fmt.Printf("Open orders:     %d\n", len(orders))
 		fmt.Printf("Inventory items: %d\n", len(inventory))
 		return nil
 	},

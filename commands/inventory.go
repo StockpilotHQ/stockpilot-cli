@@ -37,24 +37,23 @@ var inventoryListCmd = &cobra.Command{
 			return err
 		}
 
-		if jsonOutput {
-			var v any
-			json.Unmarshal(data, &v)
-			return output.JSON(v)
-		}
-
-		var items []map[string]any
-		if err := json.Unmarshal(data, &items); err != nil {
+		items, err := output.Paginated(data)
+		if err != nil {
 			return err
 		}
+
+		if jsonOutput {
+			return output.JSON(items)
+		}
+
 		rows := make([][]string, 0, len(items))
 		for _, item := range items {
 			rows = append(rows, []string{
 				fmt.Sprint(item["id"]),
 				fmt.Sprint(item["sku"]),
-				fmt.Sprint(item["name"]),
+				fmt.Sprint(item["item_name"]),
 				fmt.Sprint(item["quantity"]),
-				fmt.Sprint(item["location"]),
+				fmt.Sprint(item["bin_location"]),
 			})
 		}
 		output.Table([]string{"ID", "SKU", "Name", "Qty", "Location"}, rows)

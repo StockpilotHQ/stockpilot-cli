@@ -8,6 +8,21 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
+// Paginated unwraps {"count":N,"results":[...]} or falls back to a raw array.
+func Paginated(data []byte) ([]map[string]any, error) {
+	var wrapper struct {
+		Results []map[string]any `json:"results"`
+	}
+	if err := json.Unmarshal(data, &wrapper); err == nil && wrapper.Results != nil {
+		return wrapper.Results, nil
+	}
+	var list []map[string]any
+	if err := json.Unmarshal(data, &list); err != nil {
+		return nil, err
+	}
+	return list, nil
+}
+
 // JSON prints data as formatted JSON to stdout.
 func JSON(v any) error {
 	enc := json.NewEncoder(os.Stdout)
