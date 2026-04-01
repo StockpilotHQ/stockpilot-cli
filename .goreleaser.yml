@@ -1,3 +1,5 @@
+version: 2
+
 project_name: stockpilot
 
 builds:
@@ -22,11 +24,6 @@ archives:
 
 checksum:
   name_template: "checksums.txt"
-
-release:
-  github:
-    owner: stockpilot
-    name: stockpilot-cli
 
 changelog:
   sort: asc
