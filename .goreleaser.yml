@@ -4,7 +4,7 @@ project_name: stockpilot
 
 builds:
   - id: stockpilot
-    main: ./cmd/stockpilot
+    dir: ./cmd/stockpilot
     binary: stockpilot
     env:
       - CGO_ENABLED=0
