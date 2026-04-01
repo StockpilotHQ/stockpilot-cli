@@ -33,7 +33,7 @@ var ordersListCmd = &cobra.Command{
 			"page_size": {fmt.Sprint(pageSize)},
 		}
 		if status, _ := cmd.Flags().GetString("status"); status != "" {
-			params.Set("filters", fmt.Sprintf(`{"status":"%s"}`, status))
+			params.Set("status", status)
 		}
 
 		data, err := client.Get("/orders", params)
