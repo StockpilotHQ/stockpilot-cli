@@ -1,7 +1,7 @@
-# Binary
-stockpilot
-stockpilot-cli
-stockpilot.exe
+# Binary (root-level only, not subdirectories)
+/stockpilot
+/stockpilot-cli
+/stockpilot.exe
 dist/
 
 # Go
