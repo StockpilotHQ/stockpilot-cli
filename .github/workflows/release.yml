@@ -13,16 +13,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-go@v5
         with:
           go-version: "1.22"
 
-      - uses: goreleaser/goreleaser-action@v6
+      - name: Build binaries
+        run: |
+          mkdir -p dist
+          GOOS=darwin  GOARCH=arm64 go build -ldflags="-s -w -X github.com/StockpilotHQ/stockpilot-cli/commands.version=${{ github.ref_name }}" -o dist/stockpilot_darwin_arm64   ./cmd/stockpilot
+          GOOS=darwin  GOARCH=amd64 go build -ldflags="-s -w -X github.com/StockpilotHQ/stockpilot-cli/commands.version=${{ github.ref_name }}" -o dist/stockpilot_darwin_amd64   ./cmd/stockpilot
+          GOOS=linux   GOARCH=amd64 go build -ldflags="-s -w -X github.com/StockpilotHQ/stockpilot-cli/commands.version=${{ github.ref_name }}" -o dist/stockpilot_linux_amd64    ./cmd/stockpilot
+          GOOS=linux   GOARCH=arm64 go build -ldflags="-s -w -X github.com/StockpilotHQ/stockpilot-cli/commands.version=${{ github.ref_name }}" -o dist/stockpilot_linux_arm64    ./cmd/stockpilot
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -X github.com/StockpilotHQ/stockpilot-cli/commands.version=${{ github.ref_name }}" -o dist/stockpilot_windows_amd64.exe ./cmd/stockpilot
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          version: "~> v2"
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: dist/*
+          generate_release_notes: true
