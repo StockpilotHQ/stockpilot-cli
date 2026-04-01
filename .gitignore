@@ -1,0 +1,24 @@
+# Binary
+stockpilot
+stockpilot-cli
+stockpilot.exe
+dist/
+
+# Go
+*.test
+*.out
+vendor/
+
+# Config / credentials (never commit)
+~/.config/stockpilot/
+
+# GoReleaser
+.goreleaser.yaml
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,37 @@
+project_name: stockpilot
+
+builds:
+  - id: stockpilot
+    main: ./cmd/stockpilot
+    binary: stockpilot
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/stockpilot/stockpilot-cli/commands.version={{.Version}}
+
+archives:
+  - format: binary
+    name_template: "stockpilot_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  github:
+    owner: stockpilot
+    name: stockpilot-cli
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
