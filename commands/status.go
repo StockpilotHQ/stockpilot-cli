@@ -10,10 +10,10 @@ import (
 	"github.com/StockpilotHQ/stockpilot-cli/internal/output"
 )
 
-// status is a smart compound command: shows pending orders + low stock items.
+// status is a smart compound command: shows open orders + inventory count.
 var statusCmd = &cobra.Command{
 	Use:   "status",
-	Short: "Pending orders and low stock overview",
+	Short: "Open orders and inventory overview",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := config.Load()
 		if err != nil {
@@ -21,39 +21,40 @@ var statusCmd = &cobra.Command{
 		}
 		client := api.New(cfg.ClientID, cfg.ClientSecret)
 
-		// Fetch pending orders
+		// Fetch open orders — use count from wrapper, not len(results)
 		ordersData, err := client.Get("/orders", url.Values{
-			"page_size": {"100"},
+			"page_size": {"1"},
+			"status":    {"open"},
 		})
 		if err != nil {
 			return err
 		}
-		orders, err := output.Paginated(ordersData)
+		_, openOrderCount, err := output.PaginatedCount(ordersData)
 		if err != nil {
 			return err
 		}
 
-		// Fetch inventory
+		// Fetch inventory total count
 		inventoryData, err := client.Get("/inventory", url.Values{
-			"page_size": {"1000"},
+			"page_size": {"1"},
 		})
 		if err != nil {
 			return err
 		}
-		inventory, err := output.Paginated(inventoryData)
+		_, inventoryCount, err := output.PaginatedCount(inventoryData)
 		if err != nil {
 			return err
 		}
 
 		if jsonOutput {
 			return output.JSON(map[string]any{
-				"orders":    orders,
-				"inventory": inventory,
+				"open_orders":     openOrderCount,
+				"inventory_items": inventoryCount,
 			})
 		}
 
-		fmt.Printf("Open orders:     %d\n", len(orders))
-		fmt.Printf("Inventory items: %d\n", len(inventory))
+		fmt.Printf("Open orders:     %d\n", openOrderCount)
+		fmt.Printf("Inventory items: %d\n", inventoryCount)
 		return nil
 	},
 }

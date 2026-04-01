@@ -23,6 +23,22 @@ func Paginated(data []byte) ([]map[string]any, error) {
 	return list, nil
 }
 
+// PaginatedCount returns both the results and the total count from the wrapper.
+func PaginatedCount(data []byte) ([]map[string]any, int, error) {
+	var wrapper struct {
+		Count   int              `json:"count"`
+		Results []map[string]any `json:"results"`
+	}
+	if err := json.Unmarshal(data, &wrapper); err == nil && wrapper.Results != nil {
+		return wrapper.Results, wrapper.Count, nil
+	}
+	var list []map[string]any
+	if err := json.Unmarshal(data, &list); err != nil {
+		return nil, 0, err
+	}
+	return list, len(list), nil
+}
+
 // JSON prints data as formatted JSON to stdout.
 func JSON(v any) error {
 	enc := json.NewEncoder(os.Stdout)
